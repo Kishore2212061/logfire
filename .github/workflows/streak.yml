@@ -1,0 +1,31 @@
+name: GitHub Streak Maintainer
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  streak:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update streak
+        run: |
+          echo "Last updated: $(date)" > streak.txt
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Kishore2212061"
+          git config --global user.email "mersalkishore79@gmail.com"
+
+      - name: Commit changes
+        run: |
+          git add streak.txt
+          git commit -m "Daily streak update" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
